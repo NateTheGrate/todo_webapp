@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <title>index page</title>
+  </head>
+  <body>
+    <form id="add-key-value-pair-form" action="/data">
+        <label> key
+            <input type="text" name = "key" id = "submit-key" value="<%= locals.key %>"/>
+        </label>
+        <label> value
+            <input type="text" name = "value" id = "submit-value" value="<%= locals.value %>"/>
+        </label>
+        <button  id = "submit-button">Submit</button>
+    </form>
+    <script>
+      document.getElementById("submit-button").addEventListener("click", function(){
+        var data = JSON.stringify(
+            { 
+              "key" : document.getElementById("submit-key").value,
+              "value" : document.getElementById("submit-value").value
+            });
+        $.ajax({
+          type: "POST",
+          url: "/data",
+          data: data,
+          contentType: "application/json",
+          success: function (result) {
+            console.log(result);
+          },
+          error: function (result, status) {
+            console.log(result);
+          }
+        });
+        console.log(data);
+      });
+    </script>
+</body>
+</html>
