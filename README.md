@@ -1,4 +1,7 @@
 # todo webapp
+## description
+a very basic todo app using node.js, express, and googlesheets-api that can display all row in a google spreadsheet, change any existing row, and delete an existing row.
+
 ## how to get running on your computer
 
 1. setup google auth credentials at google cloud developers.
