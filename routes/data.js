@@ -1,12 +1,18 @@
 const express = require("express")
+const{
+editRows,
+writeRows,
+deleteRows
+} = require("../googleSheetsService");
 const router = express.Router()
 
 
 router
     .route("/")
     .get((req,res) => {
-        res.render("data/data", {key:"insert key", value:"insert value"})
+        res.render("data/data", {key:"insert_key", value:"insert_value"})
     })
+
     /*
     method: POST
     URL : /data
@@ -19,26 +25,35 @@ router
     - if key already exists, you may overwrite old value
     Data-Type: json
     */
-    .post((req,res)=>{
-        const isValid = true
+    .post(async(req,res)=>{
 
-        console.log(req.body)
-
-        if(isValid){
+        dataArr = [[req.body.key, req.body.value]]
+        try{
+            await writeRows(dataArr)
+            console.log("POST success: wrote " + dataArr + " to spreadsheet")
             res.status(200).send("OK")
-        }else{
-            res.status(500).send("something went wrong")
+        }catch(err){
+            console.log("POST ERROR : likely sheetname wrong")
+            console.log(err)
+            res.status(500).send(err)
         }
+        
     })
 
 router
     .route("/:key")
-    // want to view particular key value pair
-    .get((req,res) => {
+    .post(async(req,res)=>{
 
-        // want to replace this with strictly viewing the row in the spreadsheet
-        // with two buttons to edit or delete
-        res.render("data/sheet_row", { key:"insert key", value:"insert value"})
+        try{
+            await editRows(req.body.key, "DONE")
+            console.log("POST success: changed " + req.body.key + " in spreadsheet")
+            res.status(200).send("OK")
+        }catch(err){
+            console.log("POST ERROR : likely sheetname is wrong or the key doesn't exist")
+            console.log(err)
+            res.status(500).send(err)
+        }
+
     })
     /*
         method: DELETE
@@ -47,17 +62,17 @@ router
         Data-Type: json
     
     */
-
-    .delete((req,res)=>{
-        const isValid = true
-
-        console.log("hi")
-
-        if(isValid){
+    .delete(async(req,res)=>{
+        try{
+            await deleteRows(req.body.key)
+            console.log("DELETE success: deleted " + req.body.key + " from spreadsheet")
             res.status(200).send("OK")
-        }else{
-            res.status(500).send("something went wrong")
+        }catch(err){
+            console.log("DELETE ERROR : likely sheetname is wrong or the key doesn't exist")
+            console.log(err)
+            res.status(500).send(err)
         }
+        
     })
   
 

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+        <title>index page</title>
+        <style>
+            table, th, td {
+            border:1px solid black;
+            }
+        </style>
+    </head>
+    <body>
+        <div id = "homebar">
+            <a href = "/" >Go Home</a>
+            <a href = "/all"> View All Data</a>
+            <a href = "/data">Insert Edit or Delete Data</a>
+        </div>
+
+        <div id ="spreadsheet">
+        </div>
+        <script>
+            // Function to create a table as a child of elem.
+            // data must be an array of arrays (outer array is rows).
+            function tableCreate(elem, data)
+            {
+                var tbl  = document.createElement("table");
+                tbl.style.width  = "70%";
+
+                for (var i = 0; i < data.length; ++i)
+                {
+                    var tr = tbl.insertRow();
+                    for(var j = 0; j < data[i].length; ++j)
+                    {
+                        var td = tr.insertCell();
+                        td.appendChild(document.createTextNode(data[i][j].toString()));
+                    }
+                }
+                elem.appendChild(tbl);
+            }
+            
+            spreadsheet = document.getElementById("spreadsheet");
+            tableCreate(spreadsheet, <%-data%>.values)
+            console.log(<%-data%>.values)
+        </script>
+    </body>
+</html>

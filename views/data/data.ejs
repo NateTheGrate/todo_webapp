@@ -6,38 +6,84 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <title>index page</title>
+    <style>
+      table, th, td {
+        border:1px solid black;
+      }
+    </style>
   </head>
   <body>
-    <form id="add-key-value-pair-form" action="/data">
-        <label> key
-            <input type="text" name = "key" id = "submit-key" value="<%= locals.key %>"/>
+    <div id = "homebar">
+      <a href = "/" >Go Home</a>
+      <a href = "/all"> View All Data</a>
+      <a href = "/data">Insert Edit or Delete Data</a>
+    </div>
+
+
+    <div>
+      <form id="add-key-value-pair-form" action="/data">
+          <label> Item
+              <input type="text" name = "key" id = "submit-key" value="insert item"/>
+          </label>
+          <label> Done?
+              <input type="text" name = "value" id = "submit-value" value="No"/>
+          </label>
+          <button  type = "button" id = "submit-button">Append</button>
+      </form>
+    </div>
+
+    <div>
+      <form id="add-key-value-pair-form" action="/data/<%=locals.key%>" >
+        <label> edit existing item
+          <input type="text" name = "key" id = "delete-key" value="please insert valid item"/>
         </label>
-        <label> value
-            <input type="text" name = "value" id = "submit-value" value="<%= locals.value %>"/>
-        </label>
-        <button  id = "submit-button">Submit</button>
-    </form>
+        <button type = "button" id = "edit-button">Mark as done?</button>
+        <button type = "button" id = "delete-button">Delete</button>
+      </form>
+    </div>
+
+
     <script>
+
+      function sendHTMLRequest(type, url, data){
+        $.ajax({
+          type: type,
+          url: url,
+          data: data,
+          contentType: "application/json",
+          success: function (result) {
+            console.log(result);
+            console.log("HTML " + type + " success!")
+          },
+          error: function (result, status) {
+            console.log(result);
+            console.log("HTML " + type + " error")
+          }
+        })
+      }
+      
       document.getElementById("submit-button").addEventListener("click", function(){
         var data = JSON.stringify(
             { 
               "key" : document.getElementById("submit-key").value,
               "value" : document.getElementById("submit-value").value
             });
-        $.ajax({
-          type: "POST",
-          url: "/data",
-          data: data,
-          contentType: "application/json",
-          success: function (result) {
-            console.log(result);
-          },
-          error: function (result, status) {
-            console.log(result);
-          }
-        });
-        console.log(data);
+        sendHTMLRequest("POST", "/data", data)
       });
+
+      document.getElementById("edit-button").addEventListener("click", function(){
+        var editKey = document.getElementById("delete-key").value
+        sendHTMLRequest("POST", "/data/" + editKey, JSON.stringify({key: editKey}))
+
+      });
+
+
+    
+      document.getElementById("delete-button").addEventListener("click", function(){
+        var deleteKey = document.getElementById("delete-key").value
+        sendHTMLRequest("DELETE", "/data/" + deleteKey, JSON.stringify({key: deleteKey}))
+      });
+
     </script>
 </body>
 </html>

@@ -1,4 +1,12 @@
 const express = require("express")
+
+const{
+getSpreadSheet,
+getSpreadSheetValues,
+} = require("./googleSheetsService");
+
+
+
 const app = express()
 
 // serves static html css javascript files 
@@ -9,7 +17,6 @@ app.use(express.json())
 app.set('view engine', 'ejs')
 
 
-// 1
 /*
 method: GET
 URL : /all
@@ -17,12 +24,16 @@ URL : /all
 Description : returns all items in the google spreadsheet
 Data-Type: json
 */
-app.get("/all", (req, res) =>{
-    const isValid = true
-    if(isValid){
-        res.status(200).send("OK")
-    }else{
-        res.status(500).send("something went wrong")
+app.get("/all", async(req, res) =>{
+
+    try{
+        getRows = await getSpreadSheetValues()
+        console.log("GET success")
+        res.status(200).render( "all", {data : JSON.stringify(getRows.data)})
+    }catch(err){
+        console.log("POST ERROR : likely sheetname wrong")
+        console.log(err)
+        res.status(500).send(err)
     }
 })
 
@@ -32,4 +43,4 @@ app.use('/data', dataRouter)
 
 
 
-app.listen(3000)
+app.listen(3000 , (req, res) => console.log("running on 3000"))
