@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-        <title>index page</title>
+        <title>view all page</title>
         <style>
             table, th, td {
             border:1px solid black;
@@ -21,9 +21,15 @@
 
         <div id ="spreadsheet">
         </div>
+        
         <script>
-            // Function to create a table as a child of elem.
-            // data must be an array of arrays (outer array is rows).
+
+            /* 
+                Function to create a table as a child of elem.
+                data must be an array of arrays (outer array is rows).
+                @param elem: element in document to make the table a child of
+                @param data: data of spreadsheet in the form of a 2d array
+            */
             function tableCreate(elem, data)
             {
                 var tbl  = document.createElement("table");
@@ -42,7 +48,9 @@
             }
             
             spreadsheet = document.getElementById("spreadsheet");
+            // create table under spreadsheet element with 2d array of spreadsheet data
             tableCreate(spreadsheet, <%-data%>.values)
+            // log data inserted this way
             console.log(<%-data%>.values)
         </script>
     </body>

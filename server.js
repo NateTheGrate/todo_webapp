@@ -1,19 +1,15 @@
 const express = require("express")
-
-const{
-getSpreadSheet,
-getSpreadSheetValues,
-} = require("./googleSheetsService");
-
-
+// google spreadsheet api wrapper in ./googleSheetsService.js
+const{getSpreadSheetValues} = require("./googleSheetsService");
 
 const app = express()
 
-// serves static html css javascript files 
+// serves static index page
 app.use(express.static("public"))
-//app.use(express.urlencoded({extended: true}))
+// lets us get json data from users on page
 app.use(express.json())
 
+// using ejs
 app.set('view engine', 'ejs')
 
 
@@ -26,6 +22,9 @@ Data-Type: json
 */
 app.get("/all", async(req, res) =>{
 
+    // make sure server doesn't crash.
+    // if successful, send 200 code out
+    // otherwise, send 500 code and and log error in console
     try{
         getRows = await getSpreadSheetValues()
         console.log("GET success")
@@ -37,10 +36,10 @@ app.get("/all", async(req, res) =>{
     }
 })
 
-// router for data webpages
+// router for data webpages in ./routes
 const dataRouter = require("./routes/data")
 app.use('/data', dataRouter)
 
 
-
+// turn server on
 app.listen(3000 , (req, res) => console.log("running on 3000"))

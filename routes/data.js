@@ -1,29 +1,38 @@
 const express = require("express")
+
 const{
 editRows,
 writeRows,
 deleteRows
 } = require("../googleSheetsService");
+
 const router = express.Router()
 
 
 router
+    /*
+    method: GET
+    URL : /data
+
+    Description : serve html page to change, append, or delete rows in spreadsheet
+    Data-Type: json
+    */
     .route("/")
     .get((req,res) => {
         res.render("data/data", {key:"insert_key", value:"insert_value"})
     })
 
     /*
-    method: POST
-    URL : /data
-    Body: {
-    "key": "value"
-    }
+        method: POST
+        URL : /data
+        Body: {
+        "key": "value"
+        }
 
-    Description : store a key-value pair in the google spreadsheet
-    - you may assume that there will only be one key-value pair
-    - if key already exists, you may overwrite old value
-    Data-Type: json
+        Description : store a key-value pair in the google spreadsheet
+        - you may assume that there will only be one key-value pair
+        - if key already exists, you may overwrite old value
+        Data-Type: json
     */
     .post(async(req,res)=>{
 
@@ -42,6 +51,16 @@ router
 
 router
     .route("/:key")
+    /*
+        method: POST
+        URL :/data/:key
+        body:{
+            "key" : "value"
+        }
+
+        Description: find and change already existing key-value pair
+        ata-Type:  json
+    */
     .post(async(req,res)=>{
 
         try{
@@ -58,7 +77,10 @@ router
     /*
         method: DELETE
         URL : /data/:key
-        Description : delete the key-value pair
+        body: {
+            "key":"value"
+        }
+        Description : find and delete the key-value pair
         Data-Type: json
     
     */

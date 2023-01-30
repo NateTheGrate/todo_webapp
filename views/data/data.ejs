@@ -5,13 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-    <title>index page</title>
+    <title>edit data page</title>
     <style>
       table, th, td {
         border:1px solid black;
       }
     </style>
   </head>
+  
   <body>
     <div id = "homebar">
       <a href = "/" >Go Home</a>
@@ -28,13 +29,13 @@
           <label> Done?
               <input type="text" name = "value" id = "submit-value" value="No"/>
           </label>
-          <button  type = "button" id = "submit-button">Append</button>
+          <button  type = "button" id = "submit-button">Append/Edit</button>
       </form>
     </div>
 
     <div>
       <form id="add-key-value-pair-form" action="/data/<%=locals.key%>" >
-        <label> edit existing item
+        <label> change existing item
           <input type="text" name = "key" id = "delete-key" value="please insert valid item"/>
         </label>
         <button type = "button" id = "edit-button">Mark as done?</button>
@@ -45,6 +46,13 @@
 
     <script>
 
+      /*
+        wrapper for jquery .ajax to send HTML requests
+        @param type: request type (GET, POST, DELETE, PUT)
+        @param url: url to request from server
+        @param data: data to send to server
+      
+      */
       function sendHTMLRequest(type, url, data){
         $.ajax({
           type: type,
@@ -62,6 +70,7 @@
         })
       }
       
+      // when submit-button clicked, send POST for /data with user's key and value
       document.getElementById("submit-button").addEventListener("click", function(){
         var data = JSON.stringify(
             { 
@@ -71,14 +80,14 @@
         sendHTMLRequest("POST", "/data", data)
       });
 
+      // when edit-button clicked, send POST for /data/:key with user's key and value
       document.getElementById("edit-button").addEventListener("click", function(){
         var editKey = document.getElementById("delete-key").value
         sendHTMLRequest("POST", "/data/" + editKey, JSON.stringify({key: editKey}))
 
       });
 
-
-    
+      // when delete-button clicked, send DELETE for /data/:key with user's key
       document.getElementById("delete-button").addEventListener("click", function(){
         var deleteKey = document.getElementById("delete-key").value
         sendHTMLRequest("DELETE", "/data/" + deleteKey, JSON.stringify({key: deleteKey}))

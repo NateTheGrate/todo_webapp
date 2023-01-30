@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script type= "text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <title>index page</title>
+    <style>
+      table, th, td {
+        border:1px solid black;
+      }
+    </style>
+  </head>
+  <body>
+    <form id="add-key-value-pair-form" action="/data/<%=key%>" >
+      <table>
+        <tr>
+          <th>key</th>
+          <th>value</th>
+
+        </tr>
+        <tr>
+          <td><%=key%></td>
+          <td><%=value%></td>
+        </tr>
+      </table>
+      <button type = "button" id = "delete-button">Delete</button>
+    </form>
+    <script>
+      document.getElementById("delete-button").addEventListener("click", function(){
+
+        $.ajax('/data/<%=key%>',
+        {
+          type: "DELETE",
+          contentType: "application/json",
+          success: function ( data, status, jqXhr ) {
+            console.log("hello")
+          },
+          error: function(jqXhr, textStatus, errorMessage ) {
+            console.log(jqXhr, textStatus, errorMessage)
+          }
+        });
+      });
+    </script>
+</body>
+</html>
